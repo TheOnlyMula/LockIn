@@ -1,0 +1,22 @@
+# ===== Xcode user-specific files =====
+*.xcuserstate
+*.xcuserdata/
+
+# ===== Derived data =====
+DerivedData/
+.build/
+build/
+
+# ===== SwiftPM =====
+.swiftpm/
+
+# ===== macOS =====
+.DS_Store
+
+# ===== Logs =====
+*.log
+
+# ===== Secrets =====
+Secrets*.xcconfig
+*.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings
+*.xcarchive
