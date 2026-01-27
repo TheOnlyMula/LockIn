@@ -9,17 +9,17 @@ import Foundation
 struct FocusSession: Codable, Identifiable {
     let id: Int
     let createdAt: Date
+    let userID: UUID
     let duration: Int
     let category: String?
     let categoryIcon: String?
-    let userID: UUID
 }
 
 struct FocusSessionPayload: Encodable {
+    let userID: UUID
     let duration: Int
     let category: String?
     let categoryIcon: String?
-    let userID: UUID
 }
 
 @MainActor

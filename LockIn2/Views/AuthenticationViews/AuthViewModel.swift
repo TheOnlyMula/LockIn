@@ -116,7 +116,7 @@ class AuthViewModel: ObservableObject {
         }
     }
 
-    // Backwards-compatible wrapper (old misspelled name)
+    // Backwards-compatible wrapper
     func getInitalSession(email: String, password: String, confirmPassword: String) async {
         await register(email: email, password: password, confirmPassword: confirmPassword)
     }

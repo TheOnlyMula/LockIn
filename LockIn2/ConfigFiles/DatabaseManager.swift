@@ -117,10 +117,10 @@ final class DatabaseManager {
         ) async throws {
 
             let payload = FocusSessionPayload(
+                userID: userID,
                 duration: duration,
                 category: category,
-                categoryIcon: categoryIcon,
-                userID: userID
+                categoryIcon: categoryIcon
             )
 
             try await insert(into: Table.focusSession, payload: payload)
@@ -144,7 +144,6 @@ final class DatabaseManager {
             select: "userID, name, categoryIcon",
             userID: userID,
             orderBy: ("name", true)
-
         )
     }
 

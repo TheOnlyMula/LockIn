@@ -1,4 +1,4 @@
-## v1.2.0-alpha 
+## v1.2.0-alpha
 
 * Added Settings screen with glass-style background card
 * Displayed authenticated user details (email and user ID)

@@ -131,4 +131,5 @@ struct ClockControlView: View {
 
 #Preview {
     ClockControlView()
+        .environmentObject(CategoryViewModel())
 }

@@ -9,24 +9,36 @@ import SwiftUI
 struct SettingItem {
     let label: String
     let value: String
+    let icon: String
 }
-
 
 struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
 
     private var userEmail: String {
-        authViewModel.session?.user.email ?? "Not available"
+        authViewModel.session?.user.email ?? "Not signed in"
     }
 
     private var userIDString: String {
         authViewModel.userID?.uuidString ?? "Not signed in"
     }
+    
+    private var userCreatedAt: String {
+        if let date = authViewModel.session?.user.createdAt {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .short
+            return formatter.string(from: date)
+        } else {
+            return "Not signed in"
+        }
+    }
 
     private var items: [SettingItem] {
         [
-            .init(label: "Email", value: userEmail),
-            .init(label: "User ID", value: userIDString)
+            .init(label: "Email", value: userEmail, icon: "envelope.fill"),
+            .init(label: "User ID", value: userIDString, icon: "person.fill"),
+            .init(label: "Created", value: userCreatedAt, icon: "calendar")
         ]
     }
     
@@ -47,6 +59,7 @@ struct SettingsView: View {
                 List {
                     ForEach(items, id: \.label) { item in
                         HStack {
+                            Image(systemName: item.icon)
                             Text(item.label)
                                 .foregroundStyle(.primary)
                             Spacer()
