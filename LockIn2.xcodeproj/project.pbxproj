@@ -14,6 +14,7 @@
 		A2DB02C42F166C4300607599 /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = A2DB02C32F166C4300607599 /* Auth */; };
 		A2DB02C62F166C4300607599 /* PostgREST in Frameworks */ = {isa = PBXBuildFile; productRef = A2DB02C52F166C4300607599 /* PostgREST */; };
 		A2DB02C82F166C4300607599 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = A2DB02C72F166C4300607599 /* Supabase */; };
+		A2FDEC2E2F2A226200857E35 /* schema.sql in Resources */ = {isa = PBXBuildFile; fileRef = A2FDEC2D2F2A225D00857E35 /* schema.sql */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		A219EE822F28EC2100C60D2B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		A219EE842F28EC2F00C60D2B /* Changelog.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Changelog.md; sourceTree = "<group>"; };
 		A219EE862F28EC3600C60D2B /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		A2FDEC2D2F2A225D00857E35 /* schema.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = schema.sql; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -68,6 +70,7 @@
 				A219EE842F28EC2F00C60D2B /* Changelog.md */,
 				A219EE862F28EC3600C60D2B /* .gitignore */,
 				A219EE822F28EC2100C60D2B /* README.md */,
+				A2FDEC2D2F2A225D00857E35 /* schema.sql */,
 			);
 			sourceTree = "<group>";
 		};
@@ -145,6 +148,7 @@
 			files = (
 				A219EE872F28EC3600C60D2B /* .gitignore in Resources */,
 				A219EE832F28EC2100C60D2B /* README.md in Resources */,
+				A2FDEC2E2F2A226200857E35 /* schema.sql in Resources */,
 				A219EE852F28EC2F00C60D2B /* Changelog.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
