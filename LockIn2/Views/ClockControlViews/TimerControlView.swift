@@ -19,6 +19,8 @@ struct TimerControlView: View {
     @Binding var lockSectionSwitch: Bool
     @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject var categoryViewModel: CategoryViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var focusSessionViewModel: FocusSessionViewModel
     
     init(lockSectionSwitch: Binding<Bool> = .constant(false)) {
         self._lockSectionSwitch = lockSectionSwitch
@@ -38,6 +40,7 @@ struct TimerControlView: View {
     // Accurate elapsed tracking (works across background)
     @State private var totalAccumulatedTime: TimeInterval = 0
     @State private var lastDateObserved: Date? = nil
+    @State private var didLogCompletedSession: Bool = false
 
     // Category selection
     @State private var selectedCategoryName: String? = nil
@@ -49,6 +52,14 @@ struct TimerControlView: View {
             return "Choose category"
         }
         return cat.name
+    }
+    private var resolvedCategoryForSaving: (name: String, icon: String) {
+        guard let name = selectedCategoryName,
+              let cat = categoryViewModel.categories.first(where: { $0.name == name })
+        else {
+            return (name: "Uncategorised", icon: "tag")
+        }
+        return (name: cat.name, icon: cat.categoryIcon ?? "tag")
     }
 
     private let config = DialConfig(
@@ -168,7 +179,7 @@ struct TimerControlView: View {
 
                             totalAccumulatedTime = 0
                             lastDateObserved = Date()
-
+                            didLogCompletedSession = false
                             angleValue = (timeValue / config.totalValue) * 360
                             isRunning = true
                         }
@@ -191,7 +202,7 @@ struct TimerControlView: View {
 
                             totalAccumulatedTime = 0
                             lastDateObserved = nil
-
+                            didLogCompletedSession = false
                             timeValue = startValue
                             angleValue = (timeValue / config.totalValue) * 360
                         }
@@ -269,6 +280,25 @@ struct TimerControlView: View {
         angleValue = (timeValue / config.totalValue) * 360
 
         if remaining <= 0 {
+            if !didLogCompletedSession {
+                didLogCompletedSession = true
+
+                let resolved = resolvedCategoryForSaving
+                let durationSeconds = Int(startValue)
+
+                Task {
+                    do {
+                        try await focusSessionViewModel.insertFocusSession(
+                            duration: durationSeconds,
+                            category: resolved.name,
+                            categoryIcon: resolved.icon,
+                            userID: authViewModel.userID!
+                        )
+                    } catch {
+                        print("Failed to insert focus session: \(error.localizedDescription)")
+                    }
+                }
+            }
             // End of countdown
             isRunning = false
             lockSectionSwitch = false
@@ -276,6 +306,7 @@ struct TimerControlView: View {
             timeValue = 0
             angleValue = 0
             lastDateObserved = nil
+            didLogCompletedSession = false
         }
     }
 

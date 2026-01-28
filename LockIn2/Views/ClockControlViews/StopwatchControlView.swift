@@ -16,6 +16,8 @@ struct StopwatchControlView: View {
     @Binding var lockSectionSwitch: Bool
     @Environment(\.scenePhase) private var scenePhase
     @EnvironmentObject var categoryViewModel: CategoryViewModel
+    @EnvironmentObject var authViewModel: AuthViewModel
+    @EnvironmentObject var focusSessionViewModel: FocusSessionViewModel
     
     init(lockSectionSwitch: Binding<Bool> = .constant(false)) {
         self._lockSectionSwitch = lockSectionSwitch
@@ -23,6 +25,7 @@ struct StopwatchControlView: View {
 
     @State private var isRunning: Bool = false
     @State private var selectedCategoryName: String? = nil
+    @State private var didLogCompletedSession: Bool = false
 
     // Stopwatch state
     // what UI displays (seconds)
@@ -41,6 +44,15 @@ struct StopwatchControlView: View {
 
     private var canFinishNow: Bool {
         totalAccumulatedTime >= minFinishSeconds
+    }
+
+    private var resolvedCategoryForSaving: (name: String, icon: String) {
+        guard let name = selectedCategoryName,
+              let cat = categoryViewModel.categories.first(where: { $0.name == name })
+        else {
+            return (name: "Uncategorised", icon: "tag")
+        }
+        return (name: cat.name, icon: cat.categoryIcon ?? "tag")
     }
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -98,6 +110,7 @@ struct StopwatchControlView: View {
                     withAnimation(.easeInOut(duration: 0.3)) {
                         isRunning = true
                         lastDateObserved = Date()
+                        didLogCompletedSession = false
                         lockSectionSwitch = false
                     }
                 } label: {
@@ -131,6 +144,7 @@ struct StopwatchControlView: View {
                             updateTiming(now: Date())
                             isRunning = false
                             lastDateObserved = nil
+                            didLogCompletedSession = false
                             lockSectionSwitch = false
                         }
                     } label: {
@@ -145,9 +159,31 @@ struct StopwatchControlView: View {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             // finish (allowed only after 10 minutes)
                             updateTiming(now: Date())
+
+                            if !didLogCompletedSession {
+                                didLogCompletedSession = true
+
+                                let resolved = resolvedCategoryForSaving
+                                let durationSeconds = Int(totalAccumulatedTime.rounded(.down))
+
+                                Task {
+                                    do {
+                                        try await focusSessionViewModel.insertFocusSession(
+                                            duration: durationSeconds,
+                                            category: resolved.name,
+                                            categoryIcon: resolved.icon,
+                                            userID: authViewModel.userID!
+                                        )
+                                    } catch {
+                                        print("Failed to insert focus session: \(error.localizedDescription)")
+                                    }
+                                }
+                            }
+
                             isRunning = false
                             lastDateObserved = nil
                             lockSectionSwitch = false
+                            didLogCompletedSession = false
                         }
                     } label: {
                         HStack(spacing: 6) {
@@ -190,6 +226,7 @@ struct StopwatchControlView: View {
         totalAccumulatedTime = 0
         lastDateObserved = nil
         elapsedValue = 0
+        didLogCompletedSession = false
     }
 
     private func formatTimeToString(_ x: CGFloat) -> String {
