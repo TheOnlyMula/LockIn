@@ -94,7 +94,7 @@ LockIn2
 │   │   ├── CategoryViews
 │   │   ├── ClockControlViews
 │   │   ├── FocusSessionViews
-│   │   ├── FriendListViews
+│   │   ├── RelationshipViews
 │   │   ├── ModifierViews
 │   │   └── SettingViews
 │   ├── Assets

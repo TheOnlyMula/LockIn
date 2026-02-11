@@ -4,6 +4,9 @@
 //
 //  Created by Multazim Mesbah on 27/12/2025.
 //
+
+//Task 1: Fatal error: SUPABASE_URL not found. Check Info.plist and Secrets.xcconfig.
+
 import Foundation
 import Supabase
 import PostgREST
@@ -15,8 +18,7 @@ final class DatabaseManager {
     private enum Table {
         static let category = "Category"
         static let focusSession = "FocusSession"
-        static let extraUserData = "Relationship"
-
+        static let relationship = "Relationship"
     }
 
     private static let decoder: JSONDecoder = {
@@ -176,4 +178,113 @@ final class DatabaseManager {
             ]
         )
     }
+    
+    // MARK: - Relationships
+
+    /// Fetch all relationships where the user is either requester or addressee.
+    /// Note: This returns *all* statuses. Filtering by status can be done in the caller.
+    func getRelationships(userID: UUID) async throws -> [Relationship] {
+        let response = try await supabaseClient
+            .from(Table.relationship)
+            .select("requesterID, addresseeID, status, createdAt")
+            .or("requesterID.eq.\(userID.uuidString),addresseeID.eq.\(userID.uuidString)")
+            .order("createdAt", ascending: false)
+            .execute()
+
+        return try Self.decoder.decode([Relationship].self, from: response.data)
+    }
+
+    /// Insert a relationship request (status defaults to 'pending' in DB).
+    func insertRelationship(requesterID: UUID, addresseeID: UUID) async throws {
+        let payload = RelationshipPayload(
+            requesterID: requesterID,
+            addresseeID: addresseeID
+        )
+
+        try await insert(into: Table.relationship, payload: payload)
+    }
+
+    /// Update a relationship between `userID` and `otherUserID`.
+    /// - action: "pending" | "accepted" | "blocked" | "delete"
+    ///
+    /// The relationship row may have the active user in either requesterID or addresseeID,
+    /// so this function attempts both orientations.
+    func updateRelationship(
+        userID: UUID,
+        otherUserID: UUID,
+        action: String
+    ) async throws {
+        let normalized = action.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+
+        if normalized == "delete" {
+            // Try delete in both orientations (user as requester, then user as addressee)
+            let deleted = try await deleteRelationshipIfExists(requesterID: userID, addresseeID: otherUserID)
+            if !deleted {
+                _ = try await deleteRelationshipIfExists(requesterID: otherUserID, addresseeID: userID)
+            }
+            return
+        }
+
+        guard normalized == "pending" || normalized == "accepted" || normalized == "blocked" else {
+            throw NSError(
+                domain: "DatabaseManager.Relationship",
+                code: 400,
+                userInfo: [NSLocalizedDescriptionKey: "Invalid relationship action/status: \(action)"]
+            )
+        }
+
+        // Try update in both orientations (user as requester, then user as addressee)
+        let updated = try await updateRelationshipStatusIfExists(
+            requesterID: userID,
+            addresseeID: otherUserID,
+            status: normalized
+        )
+
+        if !updated {
+            _ = try await updateRelationshipStatusIfExists(
+                requesterID: otherUserID,
+                addresseeID: userID,
+                status: normalized
+            )
+        }
+    }
+
+    // MARK: - Relationship helpers
+
+    /// Returns true if a row was updated.
+    private func updateRelationshipStatusIfExists(
+        requesterID: UUID,
+        addresseeID: UUID,
+        status: String
+    ) async throws -> Bool {
+        let response = try await supabaseClient
+            .from(Table.relationship)
+            .update(["status": status])
+            .eq("requesterID", value: requesterID)
+            .eq("addresseeID", value: addresseeID)
+            .select("requesterID, addresseeID, status, createdAt")
+            .execute()
+
+        // If no rows matched, PostgREST returns an empty array for a .select() on update.
+        let updatedRows = try Self.decoder.decode([Relationship].self, from: response.data)
+        return !updatedRows.isEmpty
+    }
+
+    /// Returns true if a row was deleted.
+    private func deleteRelationshipIfExists(
+        requesterID: UUID,
+        addresseeID: UUID
+    ) async throws -> Bool {
+        let response = try await supabaseClient
+            .from(Table.relationship)
+            .delete()
+            .eq("requesterID", value: requesterID)
+            .eq("addresseeID", value: addresseeID)
+            .select("requesterID, addresseeID, status, createdAt")
+            .execute()
+
+        let deletedRows = try Self.decoder.decode([Relationship].self, from: response.data)
+        return !deletedRows.isEmpty
+    }
+
 }

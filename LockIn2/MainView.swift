@@ -32,7 +32,7 @@ struct MainView: View {
         FloatingTabView(selection: $activeTab) { tab, tabBarHeight in
             switch tab {
             case .clock: ClockControlView()
-            case .friends: FriendListView()
+            case .friends: RelationshipView()
             case .categories: CategoryView()
             case .sessions: FocusSessionView()
             case .settings: SettingsView() 
@@ -46,4 +46,6 @@ struct MainView: View {
     MainView()
         .environmentObject(CategoryViewModel())
         .environmentObject(AuthViewModel())
+        .environmentObject(FocusSessionViewModel())
+        .environmentObject(RelationshipViewModel())
 }

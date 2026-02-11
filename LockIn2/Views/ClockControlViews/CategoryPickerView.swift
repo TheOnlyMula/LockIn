@@ -73,4 +73,5 @@ struct CategoryPickerView: View {
     
     return ClockControlView()
         .environmentObject(prevCategoryVM)
+        .environmentObject(FocusSessionViewModel())
 }

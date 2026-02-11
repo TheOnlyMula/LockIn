@@ -1,3 +1,8 @@
+## v.13.0-alpha
+
+* Renamed "FriendView" to "RelationshipView" and associated files/ assets. 
+* Initiated relationshipViews. 
+
 ## v1.2.0-alpha
 
 * Added Settings screen with glass-style background card

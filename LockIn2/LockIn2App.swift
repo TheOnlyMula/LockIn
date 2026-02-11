@@ -12,6 +12,7 @@ struct LockIn2App: App {
     @StateObject private var categoryViewModel = CategoryViewModel()
     @StateObject private var focusSessionViewModel = FocusSessionViewModel()
     @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var relationshipViewModel = RelationshipViewModel()
     
     var body: some Scene {
         WindowGroup {
@@ -21,6 +22,7 @@ struct LockIn2App: App {
                         .environmentObject(categoryViewModel)
                         .environmentObject(focusSessionViewModel)
                         .environmentObject(authViewModel)
+                        .environmentObject(relationshipViewModel)
                 } else {
                     AuthView()
                         .environmentObject(authViewModel)

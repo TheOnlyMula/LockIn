@@ -29,7 +29,6 @@
 		A2CC72CC2F24B964004AA640 /* Exceptions for "LockIn2" folder in "LockIn2" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				ConfigFiles/Secrets.xcconfig,
 				Info.plist,
 			);
 			target = A2DB02A22F1665BB00607599 /* LockIn2 */;
