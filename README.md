@@ -35,7 +35,7 @@ Categories are used to understand *what* you focused on.
 
 - **Status:** Pre‑alpha / Prototype  
 - **Platform:** iOS  
-- **UI:** SwiftUI  
+- **UI:** SwiftUI
 - **Architecture:** MVVM 
 - **Backend:** Supabase (PostgreSQL + Auth + RLS)
 

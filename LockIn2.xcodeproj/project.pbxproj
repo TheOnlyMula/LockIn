@@ -25,22 +25,9 @@
 		A2FDEC2D2F2A225D00857E35 /* schema.sql */ = {isa = PBXFileReference; lastKnownFileType = text; path = schema.sql; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		A2CC72CC2F24B964004AA640 /* Exceptions for "LockIn2" folder in "LockIn2" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = A2DB02A22F1665BB00607599 /* LockIn2 */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		A2DB02A52F1665BB00607599 /* LockIn2 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				A2CC72CC2F24B964004AA640 /* Exceptions for "LockIn2" folder in "LockIn2" target */,
-			);
 			path = LockIn2;
 			sourceTree = "<group>";
 		};
