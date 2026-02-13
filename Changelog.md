@@ -1,4 +1,4 @@
-## v1.0.0-beta
+## v1.3.0-beta
 
 ### Features: 
 
