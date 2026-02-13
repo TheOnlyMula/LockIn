@@ -1,8 +1,8 @@
 /*
-LockIn2 – Database Schema & Security Documentation
+LockIn – Database Schema & Security Documentation
 ==================================================
 
-This file serves as **documentation-first SQL** for the LockIn2 PostgreSQL / Supabase backend.
+This file serves as **documentation-first SQL** for the LockIn PostgreSQL / Supabase backend.
 
 Purpose:
 - Document table structure, constraints, and relationships

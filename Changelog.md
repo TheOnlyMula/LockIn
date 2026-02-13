@@ -1,7 +1,14 @@
 ## v1.0.0-beta
 
+### Features: 
+
 * Initiated all views and released for beta testing. 
 * Added optionality for a solid or drawn background although the colour options are poor. 
+* Changed app Icons to something more minimalist - pending user feedback. 
+
+### Bug Fixes: 
+
+* Black text on dark colorScheme on login screen. 
 
 ## v1.3.0-alpha | "Complete Alpha Version"
 

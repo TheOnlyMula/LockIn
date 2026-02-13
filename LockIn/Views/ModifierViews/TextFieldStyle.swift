@@ -1,0 +1,28 @@
+//
+//  TextFieldStyle.swift
+//  LockIn
+//
+//  Created by Multazim Mesbah on 24/1/2026.
+//
+import SwiftUI
+
+struct TextFieldStyle: ViewModifier {
+    @Environment(\.colorScheme) private var colorScheme
+    
+    func body(content: Content) -> some View {
+        content
+            .padding()
+            .foregroundColor(colorScheme == .dark ? .white : .black)
+            .frame(width: 300, height: 50)
+            .background(.ultraThinMaterial)
+            .cornerRadius(10)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+    }
+}
+
+extension View {
+    func textFieldStyle() -> some View {
+        self.modifier(TextFieldStyle())
+    }
+}

@@ -82,8 +82,8 @@ Policies ensure:
 ## Project Structure
 
 ```
-LockIn2
-├── LockIn2
+LockIn
+├── LockIn
 │   ├── ConfigFiles
 │   │   ├── Configs
 │   │   ├── DatabaseManager
@@ -99,7 +99,7 @@ LockIn2
 │   │   └── SettingViews
 │   ├── Assets
 │   ├── Info
-│   ├── LockIn2App.swift
+│   ├── LockInApp.swift
 │   └── MainView.swift
 ├── Changelog
 ├── .gitignore
