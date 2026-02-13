@@ -78,27 +78,28 @@ struct ClockControlView: View {
     
     var body: some View {
         ZStack {
-            ZStack {
-                BackgroundCard() 
-                    .frame(width: cardSize.width, height: cardSize.height)
-                    .overlay(alignment: .bottomTrailing) {
-                        Button {
-                            withAnimation(.easeInOut(duration: 0.2)) {
-                                showHint.toggle()
-                            }
-                        } label: {
-                            HStack(spacing: 6) {
-                                Image(systemName: "questionmark.circle")
-                                    .font(.system(size: 24))
-                                    .foregroundColor(.white)
-                            }
-                        }
-                        .padding(16)
-                    }
-                
-                section.contentView(lockSectionSwitch: $isSectionSwitchLocked)
-                    .frame(alignment: .center)
+            BackgroundCard() {
+                ZStack {
+                    section.contentView(lockSectionSwitch: $isSectionSwitchLocked)
+                        .frame(alignment: .center)
+                }
             }
+            .frame(height: cardSize.height)
+            .overlay(alignment: .bottomTrailing) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        showHint.toggle()
+                    }
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "questionmark.circle")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding(16)
+            }
+            
             .overlay(alignment: .top) {
                 CapsuleSegmentedPicker(segments: ClockSelection.allCases, selection: $section)
                     .frame(width: (33 * cardSize.width / 35).rounded())

@@ -17,9 +17,7 @@ struct AddCategoryCardView: View {
     @State private var addButtonPulse: Bool = false
 
     var body: some View {
-        ZStack {
-            BackgroundCard()
-
+        BackgroundCard() {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Add a category")
                     .font(.system(size: 24, weight: .bold))

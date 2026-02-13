@@ -84,16 +84,14 @@ struct RelationshipView: View {
     var body: some View {
         ZStack {
             VStack(spacing: 16) {
-                ZStack {
-                    BackgroundCard()
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    
-                    VStack (alignment: .leading, spacing: 10){
-                        
+                BackgroundCard() {
+                    VStack(alignment: .leading, spacing: 10) {
+
                         Text("Your Friends")
                             .font(.system(size: 24, weight: .bold))
-                            .padding(24)
-                        
+                            .padding(.horizontal, 24)
+                            .padding(.top, 24)
+
                         if relationshipViewModel.isLoading {
                             ProgressView()
                                 .frame(maxWidth: .infinity, alignment: .center)
@@ -126,13 +124,19 @@ struct RelationshipView: View {
                         }
 
                         Spacer()
-                        
+
                         HStack {
                             Spacer()
 
                             Button {
                                 guard let activeUserID = authViewModel.userID else { return }
                                 UIPasteboard.general.string = activeUserID.uuidString
+                                
+                                let toast = ToastValue(
+                                    icon: Image(systemName: "document.on.document"),
+                                    message: "Your UUID copied"
+                                )
+                                presentToast(toast)
                             } label: {
                                 HStack(spacing: 10) {
                                     Text("Copy your UUID")
@@ -158,15 +162,13 @@ struct RelationshipView: View {
                         }
                     }
                 }
+                .frame(maxHeight: .infinity)
 
-                ZStack {
-                    BackgroundCard()
-                        .frame(maxWidth: .infinity, maxHeight: 130)
-                    
+                BackgroundCard() {
                     VStack(alignment: .leading, spacing: 10) {
                         Text("Add a friend")
                             .font(.system(size: 24, weight: .bold))
-                        
+
                         HStack {
                             TextField("Add Friend", text: $newFriendUUIDString)
                                 .disableAutocorrection(true)
@@ -175,7 +177,6 @@ struct RelationshipView: View {
                                     RoundedRectangle(cornerRadius: 14, style: .continuous)
                                         .fill(.ultraThinMaterial)
                                 )
-                            
                             Button {
                                 guard let activeUserID = authViewModel.userID else { return }
                                 Task {
@@ -187,16 +188,16 @@ struct RelationshipView: View {
                                         )
                                     }
                                 }
-                                
+
                             } label: {
                                 Image(systemName: "plus.circle")
                                     .font(.system(size: 20, weight: .semibold))
                             }
                         }
-                        
                     }
                     .padding(24)
                 }
+                .frame(maxHeight: 125)
             }
             .padding()
             .padding(.horizontal, 10)

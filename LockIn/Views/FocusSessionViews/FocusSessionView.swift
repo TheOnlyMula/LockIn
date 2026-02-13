@@ -68,57 +68,54 @@ struct FocusSessionView: View {
 
     var body: some View {
         ZStack {
-            BackgroundCard()
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            BackgroundCard() {
+                VStack {
+                    HStack {
+                        Text("Your Sessions")
+                            .font(.system(size: 24, weight: .bold))
+                        
+                        Spacer()
+
+                        Button {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                showHint.toggle()
+                            }
+                        } label: {
+                            HStack(spacing: 6) {
+                                Image(systemName: "questionmark.circle")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+
+                    if focusSessionViewModel.focusSessions.isEmpty {
+                        ContentUnavailableView(
+                            "No sessions made yet",
+                            systemImage: "list.bullet.clipboard",
+                            description: Text("Create sessions to view them here")
+                        )
+                    } else {
+                        List {
+                            ForEach(focusSessionViewModel.focusSessions) { focusSession in
+                                FocusSessionRow(session: focusSession)
+                                    .listRowBackground(Color.clear)
+                            }
+                        }
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .background(.ultraThinMaterial)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .listSectionSeparator(.hidden)
+                        .listRowSeparator(.hidden)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+                    }
+                }
                 .padding()
-                .padding(.horizontal, 10)
-                .padding(.bottom, 75)
-            
-            VStack {
-                HStack {
-                    Text("Your Sessions")
-                        .font(.system(size: 24, weight: .bold))
-                        .padding(.top, 35)
-                    
-                    Button {
-                        withAnimation(.easeInOut(duration: 0.2)) {
-                            showHint.toggle()
-                        }
-                    } label: {
-                        HStack(spacing: 6) {
-                            Image(systemName: "questionmark.circle")
-                                .font(.system(size: 24))
-                                .foregroundColor(.black)
-                        }
-                    }
-                    .padding(.top, 35)
-                }
-                
-                if focusSessionViewModel.focusSessions.isEmpty {
-                    ContentUnavailableView(
-                        "No sessions made yet",
-                        systemImage: "list.bullet.clipboard",
-                        description: Text("Create sessions to view them here")
-                    )
-                } else {
-                    List {
-                        ForEach(focusSessionViewModel.focusSessions) { focusSession in
-                            FocusSessionRow(session: focusSession)
-                                .listRowBackground(Color.clear)
-                        }
-                    }
-                    .listStyle(.plain)
-                    .scrollContentBackground(.hidden)
-                    .background(.ultraThinMaterial)
-                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                    .listSectionSeparator(.hidden)
-                    .listRowSeparator(.hidden)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                }
             }
-            .padding() // match the inner padding visually inside the card
-            .padding(.horizontal, 30)
-            .padding(.bottom, 96)
+            .padding()
+            .padding(.horizontal, 10)
+            .padding(.bottom, 75)
         }
         .popupOverlay(isPresented: $showHint) {
             VStack(spacing: 12) {
@@ -158,7 +155,7 @@ struct FocusSessionView: View {
     }
 }
 
-#Preview {
+#Preview("Preview with Sessions") {
     let vm = FocusSessionViewModel()
     vm.focusSessions = [
         FocusSession(
@@ -171,7 +168,7 @@ struct FocusSessionView: View {
         ),
         FocusSession(
             id: 2,
-            createdAt: Date().addingTimeInterval(-7200),
+            createdAt: Date().addingTimeInterval(-72000),
             userID: UUID(),
             duration: 2700,
             category: "Gym",
@@ -179,13 +176,20 @@ struct FocusSessionView: View {
         ),
         FocusSession(
             id: 3,
-            createdAt: Date().addingTimeInterval(-10800),
+            createdAt: Date().addingTimeInterval(-308000),
             userID: UUID(),
             duration: 3600,
             category: "Coding",
             categoryIcon: "laptopcomputer"
         )
     ]
+
+    return FocusSessionView()
+        .environmentObject(vm)
+}
+
+#Preview("Preview no Sessions") {
+    let vm = FocusSessionViewModel()
 
     return FocusSessionView()
         .environmentObject(vm)

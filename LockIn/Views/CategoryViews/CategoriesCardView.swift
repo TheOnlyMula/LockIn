@@ -22,55 +22,54 @@ struct CategoriesCardView: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(title)
-                .font(.system(size: 24, weight: .bold))
+        BackgroundCard() {
+            VStack(alignment: .leading, spacing: 10) {
+                Text(title)
+                    .font(.system(size: 24, weight: .bold))
 
-            if categories.isEmpty {
-                ContentUnavailableView(
-                    "No categories made yet",
-                    systemImage: "tag",
-                    description: Text("Create categories to organise your sessions")
-                )
-            } else {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(.ultraThinMaterial)
+                if categories.isEmpty {
+                    ContentUnavailableView(
+                        "No categories made yet",
+                        systemImage: "tag",
+                        description: Text("Create categories to organise your sessions")
+                    )
+                } else {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .fill(.ultraThinMaterial)
 
-                    List {
-                        ForEach(categories, id: \.name) { category in
-                            HStack(spacing: 12) {
-                                Image(systemName: category.categoryIcon ?? "tag")
-                                    .frame(width: 22)
+                        List {
+                            ForEach(categories, id: \.name) { category in
+                                HStack(spacing: 12) {
+                                    Image(systemName: category.categoryIcon ?? "tag")
+                                        .frame(width: 22)
 
-                                Text(category.name)
-                                    .font(.system(size: 16, weight: .semibold))
+                                    Text(category.name)
+                                        .font(.system(size: 16, weight: .semibold))
 
-                                Spacer(minLength: 0)
-                            }
-                            .swipeActions {
-                                Button(role: .destructive) {
-                                    onDelete(category)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
+                                    Spacer(minLength: 0)
                                 }
+                                .swipeActions {
+                                    Button(role: .destructive) {
+                                        onDelete(category)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                                .listRowBackground(Color.clear)
                             }
-                            .listRowBackground(Color.clear)
                         }
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .background(Color.clear)
                     }
-                    .listStyle(.plain)
-                    .scrollContentBackground(.hidden)
-                    .background(Color.clear)
+                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .padding(.top, 4)
+                    .frame(height: listHeight)
                 }
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .padding(.top, 4)
-                .frame(height: listHeight)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(16)
         }
-        .frame(maxWidth: maxCardWidth, alignment: .leading)
-        .padding(16)
-        .background(BackgroundCard())
-        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        .fixedSize(horizontal: false, vertical: false)
     }
 }

@@ -21,13 +21,13 @@ struct AppBackgroundModifier: ViewModifier {
     private var backgroundColor: Color {
         colorScheme == .dark
         ? Color(red: 65/255, green: 102/255, blue: 94/255)
-        : Color(red: 255/255, green: 255/255, blue: 217/255)
+        : Color(red: 244/255, green: 242/255, blue: 217/255)
     }
     
     func body(content: Content) -> some View {
         ZStack {
             if showWallpaper {
-                Image(colorScheme == .dark ? "Dark Background" : "Background")
+                Image("drawnWallpaper")
                     .resizable()
                     .scaledToFill()
                     .ignoresSafeArea()
@@ -47,13 +47,6 @@ struct AppBackgroundModifier: ViewModifier {
 extension View {
     func appBackground(blurred: Bool = false, blurRadius: CGFloat = 5) -> some View {
         modifier(AppBackgroundModifier(isBlurred: blurred, blurRadius: blurRadius))
-    }
-}
-
-struct BackgroundCard: View {
-    var body: some View {
-        RoundedRectangle(cornerRadius: 24, style: .continuous)
-            .fill(.ultraThinMaterial)
     }
 }
 
