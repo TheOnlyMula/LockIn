@@ -1,4 +1,9 @@
-## v.13.0-alpha
+## v1.0.0-beta
+
+* Initiated all views and released for beta testing. 
+* Added optionality for a solid or drawn background although the colour options are poor. 
+
+## v1.3.0-alpha | "Complete Alpha Version"
 
 * Renamed "FriendView" to "RelationshipView" and associated files/ assets. 
 * Initiated relationshipViews. 

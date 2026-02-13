@@ -14,6 +14,7 @@ struct SettingItem {
 
 struct SettingsView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
+    @AppStorage("BOOL_BACKGROUNDPREFERENCE") var showWallpaper = false
 
     private var userEmail: String {
         authViewModel.session?.user.email ?? "Not signed in"
@@ -38,7 +39,7 @@ struct SettingsView: View {
         [
             .init(label: "Email", value: userEmail, icon: "envelope.fill"),
             .init(label: "User ID", value: userIDString, icon: "person.fill"),
-            .init(label: "Created", value: userCreatedAt, icon: "calendar")
+            .init(label: "Created", value: userCreatedAt, icon: "calendar"),
         ]
     }
     
@@ -68,6 +69,14 @@ struct SettingsView: View {
                         }
                         .listRowBackground(Color.clear)
                     }
+                    
+                    HStack {
+                        Toggle(isOn: self.$showWallpaper, label: {
+                            Label("Wallpaper", systemImage: "photo")
+                                .foregroundStyle(.primary)
+                        })
+                    }
+                    .listRowBackground(Color.clear)
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
