@@ -35,11 +35,25 @@ struct SettingsView: View {
         }
     }
 
+    private var appVersionString: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
+    }
+
+    private var appBuildString: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"
+    }
+
+    private var appVersionDisplay: String {
+        // Example: "1.4.3 (102)" where 1.4.3 is MARKETING_VERSION and 102 is CURRENT_PROJECT_VERSION
+        "\(appVersionString) (\(appBuildString))"
+    }
+
     private var items: [SettingItem] {
         [
             .init(label: "Email", value: userEmail, icon: "envelope.fill"),
             .init(label: "User ID", value: userIDString, icon: "person.fill"),
             .init(label: "Created", value: userCreatedAt, icon: "calendar"),
+            .init(label: "Version", value: appVersionDisplay, icon: "gear")
         ]
     }
     

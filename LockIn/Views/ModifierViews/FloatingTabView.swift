@@ -58,7 +58,6 @@ struct FloatingTabConfig {
     var tabAnimation: Animation = .smooth(duration: 0.35, extraBounce: 0)
     var backgroundColor: Color = .gray.opacity(0.1)
     var insetAmount: CGFloat = 6
-    var isTransluscent: Bool = true
     var hPadding: CGFloat = 15
     var bPadding: CGFloat = 5
 }
@@ -69,6 +68,8 @@ fileprivate struct FloatingTabBar<Value: CaseIterable & Hashable & FloatingTabPr
     // For Tab Sliding Effect
     @Namespace private var animation
     @State private var toggleSymbolEffect: [Bool] = Array(repeating: false, count: Value.allCases.count)
+    @Environment(\.colorScheme) private var colorScheme
+    @AppStorage("BOOL_BACKGROUNDPREFERENCE") var showWallpaper = false
     
     var body: some View {
         HStack(spacing: 0) {
@@ -100,12 +101,12 @@ fileprivate struct FloatingTabBar<Value: CaseIterable & Hashable & FloatingTabPr
         .frame(height: 50)
         .background {
             ZStack {
-                if config.isTransluscent {
+                if showWallpaper {
                     Rectangle()
                         .fill(.ultraThinMaterial)
                 } else {
                     Rectangle()
-                        .fill(.background)
+                        .fill(AppColors.cardFill(colorScheme: colorScheme))
                 }
             }
         }
@@ -116,4 +117,8 @@ fileprivate struct FloatingTabBar<Value: CaseIterable & Hashable & FloatingTabPr
 
 #Preview {
     MainView()
+        .environmentObject(CategoryViewModel())
+        .environmentObject(AuthViewModel())
+        .environmentObject(FocusSessionViewModel())
+        .environmentObject(RelationshipViewModel())
 }

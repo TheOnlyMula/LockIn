@@ -1,8 +1,17 @@
+## 1.4.2-beta 
+
+* Added launchscreen -- will need adjusting later. 
+* Keyboard blocking AddFriendCard when entering friend UUID in RelationshipView.
+* Keyboard blocking addCategoryCard when entering category name in CategoryView. 
+* Added version info to settings tab. 
+* Changed app colours and accents. 
+* Changed integration of accent colours. 
+* Added ClockControlView title. 
+
 ## 1.4.1-beta 
 
 ### Bug Fixes: 
 
-* Updated Targets > Identity > Version info to `1.3.1-beta`
 * Consistent width between background card frames. 
 * Fixed width of inner content of background cards. 
 * Consistent wallpaper assets to make toggling between light and dark mode simpler. 

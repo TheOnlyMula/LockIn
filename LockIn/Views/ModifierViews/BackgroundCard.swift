@@ -16,14 +16,14 @@ private struct BackgroundCardAvailableWidthKey: PreferenceKey {
 }
 
 struct BackgroundCard<Content: View>: View {
+    @State private var availableWidth: CGFloat = UIScreen.main.bounds.width
+    @AppStorage("BOOL_BACKGROUNDPREFERENCE") var showWallpaper = false
+    @Environment(\.colorScheme) private var colorScheme
 
     // Width of the card as a fraction of the available width (typically the screen or parent container).
     // Example: 0.92 means 92% of the available width.
     let widthFraction: CGFloat
     private let content: Content
-
-    @State private var availableWidth: CGFloat = UIScreen.main.bounds.width
-    @AppStorage("BOOL_BACKGROUNDPREFERENCE") var showWallpaper = false
 
     init(
         //adjust width of cards
@@ -37,8 +37,10 @@ struct BackgroundCard<Content: View>: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(.ultraThinMaterial)
-
+                .fill(showWallpaper
+                    ? AnyShapeStyle(.ultraThinMaterial)
+                    : AnyShapeStyle(AppColors.cardFill(colorScheme: colorScheme))
+                )
             content
         }
         .frame(width: availableWidth * widthFraction)

@@ -1,5 +1,5 @@
 //
-//  AppBackgroundModifier.swift
+//  AppWallpaper.swift
 //  LockIn
 //
 //  Created by Multazim Mesbah on 14/1/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AppBackgroundModifier: ViewModifier {
+struct AppWallpaper: ViewModifier {
     @Environment(\.colorScheme) private var colorScheme
     @AppStorage("BOOL_BACKGROUNDPREFERENCE") var showWallpaper = false
     let isBlurred: Bool
@@ -20,8 +20,8 @@ struct AppBackgroundModifier: ViewModifier {
     
     private var backgroundColor: Color {
         colorScheme == .dark
-        ? Color(red: 65/255, green: 102/255, blue: 94/255)
-        : Color(red: 244/255, green: 242/255, blue: 217/255)
+        ? Color(.black)
+        : Color(.white)
     }
     
     func body(content: Content) -> some View {
@@ -46,7 +46,7 @@ struct AppBackgroundModifier: ViewModifier {
 
 extension View {
     func appBackground(blurred: Bool = false, blurRadius: CGFloat = 5) -> some View {
-        modifier(AppBackgroundModifier(isBlurred: blurred, blurRadius: blurRadius))
+        modifier(AppWallpaper(isBlurred: blurred, blurRadius: blurRadius))
     }
 }
 

@@ -18,15 +18,22 @@ Button("Show Toast") {
 */
 
 import SwiftUI
+import Combine
 import Toasts
 
 struct RelationshipView: View {
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var relationshipViewModel: RelationshipViewModel
-    @Environment(\.presentToast) private var presentToast
     
     @State private var newFriendUUIDString: String = ""
     @GestureState private var isPressingCopyButton: Bool = false
+
+    private enum FocusField: Hashable {
+        case addFriend
+    }
+
+    @FocusState private var focusedField: FocusField?
+    @State private var keyboardHeight: CGFloat = 0
 
     private struct RelationshipRow: View {
         let relationship: Relationship
@@ -83,6 +90,17 @@ struct RelationshipView: View {
     
     var body: some View {
         ZStack {
+            if focusedField == .addFriend {
+                Color.black
+                    .opacity(0.85)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .onTapGesture {
+                        focusedField = nil
+                    }
+                    .zIndex(0)
+            }
+
             VStack(spacing: 16) {
                 BackgroundCard() {
                     VStack(alignment: .leading, spacing: 10) {
@@ -132,11 +150,6 @@ struct RelationshipView: View {
                                 guard let activeUserID = authViewModel.userID else { return }
                                 UIPasteboard.general.string = activeUserID.uuidString
                                 
-                                let toast = ToastValue(
-                                    icon: Image(systemName: "document.on.document"),
-                                    message: "Your UUID copied"
-                                )
-                                presentToast(toast)
                             } label: {
                                 HStack(spacing: 10) {
                                     Text("Copy your UUID")
@@ -166,11 +179,12 @@ struct RelationshipView: View {
 
                 BackgroundCard() {
                     VStack(alignment: .leading, spacing: 10) {
-                        Text("Add a friend")
+                        Text("Add a Friend")
                             .font(.system(size: 24, weight: .bold))
 
                         HStack {
                             TextField("Add Friend", text: $newFriendUUIDString)
+                                .focused($focusedField, equals: .addFriend)
                                 .disableAutocorrection(true)
                                 .padding(10)
                                 .background(
@@ -186,6 +200,7 @@ struct RelationshipView: View {
                                             addresseeID: friendUUID,
                                             refreshFor: activeUserID
                                         )
+                                        focusedField = nil
                                     }
                                 }
 
@@ -198,16 +213,45 @@ struct RelationshipView: View {
                     .padding(24)
                 }
                 .frame(maxHeight: 125)
+                // Smaller gap => card sits closer to the keyboard.
+                .offset(y: focusedField == .addFriend ? -max(0, keyboardHeight - 200) : 0)
+                .animation(.easeInOut(duration: 0.25), value: focusedField)
+                .animation(.easeInOut(duration: 0.25), value: keyboardHeight)
             }
+            .zIndex(1)
             .padding()
             .padding(.horizontal, 10)
             .padding(.bottom, 75)
         }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            if focusedField == .addFriend {
+                focusedField = nil
+            }
+        }
         .appBackground()
+        .animation(.easeInOut(duration: 0.25), value: focusedField)
+        .onReceive(keyboardHeightPublisher) { h in
+            keyboardHeight = h
+        }
         .onAppear {
             guard let activeUserID = authViewModel.userID else { return }
             Task { await relationshipViewModel.getRelationships(userID: activeUserID) }
         }
+    }
+    
+    private var keyboardHeightPublisher: AnyPublisher<CGFloat, Never> {
+        let willShow = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+            .merge(with: NotificationCenter.default.publisher(for: UIResponder.keyboardWillChangeFrameNotification))
+            .compactMap { $0.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect }
+            .map { $0.height }
+
+        let willHide = NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+            .map { _ in CGFloat(0) }
+
+        return willShow
+            .merge(with: willHide)
+            .eraseToAnyPublisher()
     }
     
     private func UUIDToString(from string: String) -> UUID? {

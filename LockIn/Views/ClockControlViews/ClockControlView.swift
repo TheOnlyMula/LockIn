@@ -79,7 +79,7 @@ struct ClockControlView: View {
     var body: some View {
         ZStack {
             BackgroundCard() {
-                ZStack {
+                VStack {
                     section.contentView(lockSectionSwitch: $isSectionSwitchLocked)
                         .frame(alignment: .center)
                 }
@@ -131,6 +131,9 @@ struct ClockControlView: View {
 }
 
 #Preview {
-    ClockControlView()
+    MainView()
         .environmentObject(CategoryViewModel())
+        .environmentObject(AuthViewModel())
+        .environmentObject(FocusSessionViewModel())
+        .environmentObject(RelationshipViewModel())
 }
