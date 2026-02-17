@@ -37,9 +37,10 @@ struct BackgroundCard<Content: View>: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 24, style: .continuous)
+                //.fill(.ultraThinMaterial)
                 .fill(showWallpaper
                     ? AnyShapeStyle(.ultraThinMaterial)
-                    : AnyShapeStyle(AppColors.cardFill(colorScheme: colorScheme))
+                    : AnyShapeStyle(Color("CardColour"))
                 )
             content
         }

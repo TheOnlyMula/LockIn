@@ -40,7 +40,7 @@ enum ClockSelection: String, CaseIterable, CapsuleSegmentProtocol {
         switch self {
         case .timer:
             return """
-            • Choose at least 10 minutes — meaningful focus starts with a real commitment.
+            • Choose at least 10 minutes.
 
             • Once you start, you have a 10‑second grace period to cancel if you change your mind.
 
@@ -66,6 +66,8 @@ enum ClockSelection: String, CaseIterable, CapsuleSegmentProtocol {
 
 struct ClockControlView: View {
     @EnvironmentObject var categoryViewModel: CategoryViewModel
+    @StateObject private var quoteManager = QuoteManager()
+    @Environment(\.colorScheme) private var colorScheme
     
     @State private var section: ClockSelection = .timer
     @State private var isSectionSwitchLocked: Bool = false
@@ -78,34 +80,51 @@ struct ClockControlView: View {
     
     var body: some View {
         ZStack {
-            BackgroundCard() {
-                VStack {
-                    section.contentView(lockSectionSwitch: $isSectionSwitchLocked)
-                        .frame(alignment: .center)
-                }
-            }
-            .frame(height: cardSize.height)
-            .overlay(alignment: .bottomTrailing) {
-                Button {
-                    withAnimation(.easeInOut(duration: 0.2)) {
-                        showHint.toggle()
-                    }
-                } label: {
-                    HStack(spacing: 6) {
-                        Image(systemName: "questionmark.circle")
-                            .font(.system(size: 24))
-                            .foregroundColor(.white)
+            VStack {
+                BackgroundCard() {
+                    VStack {
+                        section.contentView(lockSectionSwitch: $isSectionSwitchLocked)
+                            .frame(alignment: .center)
                     }
                 }
-                .padding(16)
-            }
-            
-            .overlay(alignment: .top) {
-                CapsuleSegmentedPicker(segments: ClockSelection.allCases, selection: $section)
-                    .frame(width: (33 * cardSize.width / 35).rounded())
-                    .padding(.top, 10)
-                    .allowsHitTesting(!isSectionSwitchLocked)
-                    .opacity(isSectionSwitchLocked ? 0.6 : 1.0)
+                .frame(height: cardSize.height)
+                .overlay(alignment: .bottom) {
+                    VStack {
+                        Text(quoteManager.currentQuote)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            //.foregroundStyle(colorScheme == .dark ? .secondary : .primary)
+                            .multilineTextAlignment(.center)
+                            .padding(.bottom, 8)
+                            .onTapGesture {
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    quoteManager.rotateQuote()
+                                }
+                            }
+                    }
+                    .frame(width: 300)
+                    .padding()
+                }
+                .overlay(alignment: .bottomTrailing) {
+                    Button {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            showHint.toggle()
+                        }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "questionmark.circle")
+                                .font(.system(size: 24))
+                        }
+                    }
+                    .padding(16)
+                }
+                .overlay(alignment: .top) {
+                    CapsuleSegmentedPicker(segments: ClockSelection.allCases, selection: $section)
+                        .frame(width: (33 * cardSize.width / 35).rounded())
+                        .padding(.top, 10)
+                        .allowsHitTesting(!isSectionSwitchLocked)
+                        .opacity(isSectionSwitchLocked ? 0.6 : 1.0)
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
@@ -125,6 +144,10 @@ struct ClockControlView: View {
         }
         .onChange(of: section) { _, _ in
             isSectionSwitchLocked = false
+        }
+        .onAppear {
+            // Optional: QuoteManager already rotates in init(), but this forces a refresh when the view appears.
+            quoteManager.rotateQuote()
         }
         .appBackground()
     }

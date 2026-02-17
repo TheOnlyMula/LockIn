@@ -34,7 +34,7 @@ struct AppWallpaper: ViewModifier {
                     .scaleEffect(1.2)
                     .blur(radius: isBlurred ? blurRadius : 0)
             } else {
-                backgroundColor
+                Color("BackgroundColour")
                     .ignoresSafeArea()
             }
             

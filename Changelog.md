@@ -1,3 +1,9 @@
+## 1.4.3-beta
+
+* Added a quotes section in the ClockControlView. Some of them are funny. 
+* Changed the integration of accent, card and wallpaper colours.  
+* Removed redundant and unusued SwiftUI toasts package. 
+
 ## 1.4.2-beta 
 
 * Added launchscreen -- will need adjusting later. 

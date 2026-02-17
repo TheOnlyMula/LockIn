@@ -18,6 +18,7 @@ private struct DialConfig {
 struct TimerControlView: View {
     @Binding var lockSectionSwitch: Bool
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var categoryViewModel: CategoryViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var focusSessionViewModel: FocusSessionViewModel
@@ -104,6 +105,10 @@ struct TimerControlView: View {
 
         return Color(.sRGB, red: Double(r), green: Double(g), blue: Double(b), opacity: Double(a))
     }
+    
+    private var contrastColor: Color {
+        colorScheme == .dark ? .white : .black
+    }
 
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
@@ -117,7 +122,7 @@ struct TimerControlView: View {
                 // clock notches
                 ForEach(0..<60, id: \.self) { i in
                     Rectangle()
-                        .fill(.white)
+                        .fill(.secondary)
                         .frame(width: 2.5, height: (i % 5) == 0 ? 15 : 5)
                         .offset(y: (300) / 2)
                         .rotationEffect(.init(degrees: Double(i) * 6))
@@ -155,7 +160,7 @@ struct TimerControlView: View {
                 ZStack {
                     Text(formatTimeToString(displayValue))
                         .font(.system(size: 60))
-                        .foregroundColor(.white)
+                        .foregroundColor(contrastColor)
                         .bold()
                     
                     CategoryPickerView(

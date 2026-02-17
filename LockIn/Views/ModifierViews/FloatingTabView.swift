@@ -106,7 +106,7 @@ fileprivate struct FloatingTabBar<Value: CaseIterable & Hashable & FloatingTabPr
                         .fill(.ultraThinMaterial)
                 } else {
                     Rectangle()
-                        .fill(AppColors.cardFill(colorScheme: colorScheme))
+                        .fill(Color("CardColour"))
                 }
             }
         }

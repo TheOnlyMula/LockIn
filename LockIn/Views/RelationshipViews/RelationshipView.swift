@@ -107,8 +107,7 @@ struct RelationshipView: View {
 
                         Text("Your Friends")
                             .font(.system(size: 24, weight: .bold))
-                            .padding(.horizontal, 24)
-                            .padding(.top, 24)
+                            .padding()
 
                         if relationshipViewModel.isLoading {
                             ProgressView()
@@ -138,7 +137,7 @@ struct RelationshipView: View {
                             .listSectionSeparator(.hidden)
                             .listRowSeparator(.hidden)
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                            .padding(.horizontal, 24)
+                            .padding()
                         }
 
                         Spacer()
@@ -210,7 +209,7 @@ struct RelationshipView: View {
                             }
                         }
                     }
-                    .padding(24)
+                    .padding()
                 }
                 .frame(maxHeight: 125)
                 // Smaller gap => card sits closer to the keyboard.
@@ -220,7 +219,6 @@ struct RelationshipView: View {
             }
             .zIndex(1)
             .padding()
-            .padding(.horizontal, 10)
             .padding(.bottom, 75)
         }
         .contentShape(Rectangle())

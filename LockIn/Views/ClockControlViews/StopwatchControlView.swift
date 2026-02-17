@@ -15,6 +15,7 @@ private struct DialConfig {
 struct StopwatchControlView: View {
     @Binding var lockSectionSwitch: Bool
     @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.colorScheme) private var colorScheme
     @EnvironmentObject var categoryViewModel: CategoryViewModel
     @EnvironmentObject var authViewModel: AuthViewModel
     @EnvironmentObject var focusSessionViewModel: FocusSessionViewModel
@@ -44,6 +45,10 @@ struct StopwatchControlView: View {
 
     private var canFinishNow: Bool {
         totalAccumulatedTime >= minFinishSeconds
+    }
+    
+    private var contrastColor: Color {
+        colorScheme == .dark ? .white : .black
     }
 
     private var resolvedCategoryForSaving: (name: String, icon: String) {
@@ -76,7 +81,7 @@ struct StopwatchControlView: View {
                     
                     Text(formatTimeToString(elapsedValue))
                         .font(.system(size: 60))
-                        .foregroundColor(.white)
+                        .foregroundColor(contrastColor)
                         .bold()
 
                     controlsRow
